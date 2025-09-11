@@ -1,0 +1,139 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<style>
+  /* Light Theme */
+  :root {
+    --bg-color: #ffffff;
+    --text-color: #121212;
+    --card-bg: rgba(0, 0, 0, 0.05);
+    --card-border: rgba(0, 0, 0, 0.1);
+    --table-bg: #ffffff;
+    --table-text: #121212;
+    --table-border: rgba(0, 0, 0, 0.2);
+    --alert-info-bg: #e9f5ff;
+    --alert-info-text: #0c5460;
+  }
+
+  /* Dark Theme */
+  [data-theme="dark"] {
+    --bg-color: #0d0d10;
+    --text-color: #f5f5f5;
+    --card-bg: rgba(255, 255, 255, 0.05);
+    --card-border: rgba(255, 255, 255, 0.1);
+    --table-bg: rgba(255, 255, 255, 0.05);
+    --table-text: #f5f5f5;
+    --table-border: rgba(255, 255, 255, 0.15);
+    --alert-info-bg: rgba(0, 123, 255, 0.1);
+    --alert-info-text: #d0e9ff;
+  }
+
+  body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    transition: all 0.3s ease;
+  }
+
+  .card {
+    background-color: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 10px;
+  }
+
+  .list-group-item {
+    background-color: var(--card-bg);
+    color: var(--text-color);
+    border-color: var(--card-border);
+  }
+
+  .table {
+    background-color: var(--table-bg);
+    color: var(--table-text);
+    border-color: var(--table-border);
+  }
+
+  .table thead th {
+    background-color: var(--card-bg);
+    color: var(--text-color);
+  }
+
+  .alert-info {
+    background-color: var(--alert-info-bg);
+    color: var(--alert-info-text);
+    border: none;
+  }
+
+  /* Responsive Adjustments */
+  @media (max-width: 768px) {
+    h2, h4 {
+      font-size: 1.3rem;
+    }
+    .table th, .table td {
+      font-size: 0.9rem;
+    }
+    .list-group-item {
+      flex-direction: column;
+      align-items: flex-start !important;
+    }
+    .list-group-item form {
+      margin-top: 0.5rem;
+      width: 100%;
+    }
+    .list-group-item form button {
+      width: 100%;
+    }
+  }
+</style>
+
+<h2 class="mb-4">Admin User Dashboard</h2>
+
+{% if unverified_users %}
+  <div class="card p-3 mb-3">
+    <h4 style="color: var(--link-color, #f1c40f)">Users Awaiting Verification</h4>
+    <ul class="list-group list-group-flush">
+      {% for user in unverified_users %}
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+          <div>
+            <strong>{{ user.username }}</strong> - NID: {{ user.nid_number }}
+          </div>
+          <form method="POST" action="{% url 'approve_user' user.id %}">
+            {% csrf_token %}
+            <button class="btn btn-success btn-sm">✅ Approve</button>
+          </form>
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
+{% else %}
+  <div class="alert alert-info">No users waiting for verification.</div>
+{% endif %}
+
+<h4 class="mt-5 mb-3" style="color: #17a2b8;">📍 Issue Summary (Last 30 Days)</h4>
+{% if issue_summary %}
+  <div class="table-responsive">
+    <table class="table table-bordered table-hover">
+      <thead>
+        <tr>
+          <th>Division</th>
+          <th>District</th>
+          <th>Upazila</th>
+          <th>Total Issues</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in issue_summary %}
+          <tr>
+            <td>{{ item.division }}</td>
+            <td>{{ item.district }}</td>
+            <td>{{ item.upazila }}</td>
+            <td>{{ item.total }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% else %}
+  <p class="text-muted">No issues reported in the last 30 days.</p>
+{% endif %}
+
+{% endblock %}

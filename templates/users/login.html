@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+{% block content %}
+<style>
+  .login-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 70vh;
+  }
+  .login-title {
+    font-size: 3rem;
+    margin-bottom: 40px;
+  }
+  .login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  .login-field {
+    display: flex;
+    align-items: center;
+    font-size: 1.5rem;
+    gap: 15px;
+  }
+  .login-field input {
+    background-color: transparent;
+    border: 1px solid #666;
+    border-radius: 20px;
+    padding: 8px 15px;
+    color: #f5f5f5;
+    outline: none;
+  }
+  .register-link {
+    margin-top: 20px;
+    font-size: 1rem;
+  }
+  .register-button {
+    margin-left: 10px;
+    background: linear-gradient(45deg, #f6d365, #fda085);
+    color: white;
+    border: none;
+    border-radius: 20px;
+    padding: 6px 15px;
+    text-decoration: none;
+  }
+</style>
+
+<div class="login-container">
+  <h2 class="login-title">Login</h2>
+  <form method="post" class="login-form">
+    {% csrf_token %}
+    <div class="login-field">
+      <label for="id_username">Username :</label>
+      {{ form.username }}
+    </div>
+    <div class="login-field">
+      <label for="id_password">Password :</label>
+      {{ form.password }}
+    </div>
+    <button type="submit" class="btn btn-primary mt-3">Login</button>
+  </form>
+  <div class="register-link">
+    Haven't account?
+    <a href="{% url 'register' %}" class="register-button">Register</a>
+  </div>
+</div>
+{% endblock %}

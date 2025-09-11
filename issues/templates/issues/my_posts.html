@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<style>
+  :root {
+    --bg-dark: #0d0d10;
+    --bg-light: #f5f5f5;
+    --text-dark: #121212;
+    --text-light: #f5f5f5;
+    --card-dark: rgba(255, 255, 255, 0.05);
+    --card-light: #ffffff;
+    --border-dark: rgba(255, 255, 255, 0.1);
+    --border-light: #ccc;
+  }
+
+  body[data-theme="dark"] {
+    background-color: var(--bg-dark);
+    color: var(--text-light);
+  }
+
+  body[data-theme="light"] {
+    background-color: var(--bg-light);
+    color: var(--text-dark);
+  }
+
+  .card {
+    border-radius: 12px;
+    margin-bottom: 1.5rem;
+    border: 1px solid;
+  }
+
+  body[data-theme="dark"] .card {
+    background-color: var(--card-dark);
+    border-color: var(--border-dark);
+    color: var(--text-light);
+  }
+
+  body[data-theme="light"] .card {
+    background-color: var(--card-light);
+    border-color: var(--border-light);
+    color: var(--text-dark);
+  }
+
+  h2, h5, p, small {
+    margin-bottom: 0.5rem;
+  }
+
+  img {
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    max-height: 300px;
+  }
+</style>
+
+<h2>My Posts</h2>
+
+{% for issue in posts %}
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title">{{ issue.title }}</h5>
+      <p>{{ issue.description }}</p>
+      {% if issue.image %}
+        <img src="{{ issue.image.url }}" class="img-fluid mb-2">
+      {% endif %}
+      <p><small>Created at: {{ issue.created_at }}</small></p>
+    </div>
+  </div>
+{% empty %}
+  <p>You haven't posted anything yet.</p>
+{% endfor %}
+
+{% endblock %}

@@ -1,0 +1,135 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+  .register-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 75vh;
+    padding: 20px;
+  }
+
+  .register-card {
+    background-color: #ffffff; /* light mode */
+    color: #121212;
+    padding: 40px 30px;
+    border-radius: 12px;
+    max-width: 450px;
+    width: 100%;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    transition: background-color 0.3s, color 0.3s;
+  }
+
+  .dark-theme .register-card {
+    background-color: #1e1e1e; /* dark mode */
+    color: #ffffff;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+  }
+
+  .register-title {
+    font-size: 2rem;
+    text-align: center;
+    font-family: 'Finlandica', sans-serif;
+    margin-bottom: 25px;
+  }
+
+  .register-form {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  .register-field label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 500;
+    font-size: 0.95rem;
+  }
+
+  .register-field input[type="text"],
+  .register-field input[type="email"],
+  .register-field input[type="password"] {
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 0.95rem;
+    outline: none;
+    transition: border-color 0.3s, background-color 0.3s;
+    background-color: rgba(0,0,0,0.03);
+    color: #121212;
+  }
+
+  .dark-theme .register-field input[type="text"],
+  .dark-theme .register-field input[type="email"],
+  .dark-theme .register-field input[type="password"] {
+    background-color: rgba(255,255,255,0.05);
+    color: #ffffff;
+    border: 1px solid #555;
+  }
+
+  .register-field input:focus {
+    border-color: #ff9800;
+    box-shadow: 0 0 6px rgba(255,152,0,0.4);
+  }
+
+  /* Submit Button */
+  .submit-button {
+    margin-top: 10px;
+    background-color: transparent;
+    border: 2px solid #ff9800;
+    color: #ff9800;
+    border-radius: 25px;
+    padding: 10px;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s, transform 0.2s;
+  }
+
+  .submit-button:hover {
+    background-color: #ff9800;
+    color: #121212;
+    transform: translateY(-2px);
+  }
+
+  /* Checkbox inline style */
+  .checkbox-field {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  /* Responsive adjustments */
+  @media (max-width: 500px) {
+    .register-card {
+      padding: 30px 20px;
+    }
+  }
+</style>
+
+<div class="register-container">
+  <div class="register-card">
+    <h2 class="register-title">Register</h2>
+    <form method="post" class="register-form">
+      {% csrf_token %}
+      {% for field in form %}
+        {% if field.name == "is_government" %}
+          <div class="register-field checkbox-field">
+            <input type="checkbox" name="{{ field.html_name }}" id="{{ field.id_for_label }}" {% if field.value %}checked{% endif %}>
+            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+          </div>
+        {% else %}
+          <div class="register-field">
+            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+            {{ field }}
+          </div>
+        {% endif %}
+      {% endfor %}
+      <button type="submit" class="submit-button">Register</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

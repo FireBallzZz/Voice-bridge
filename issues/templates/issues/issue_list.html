@@ -1,0 +1,245 @@
+{% extends 'base.html' %}
+{% load humanize %}
+
+{% block content %}
+
+<style>
+  /* Light Theme */
+  :root {
+    --bg-color: #ffffff;
+    --text-color: #121212;
+    --card-bg:  #FFFFFF00;
+    --card-border: rgba(255, 255, 255, 0.35);
+    --form-bg: rgba(0, 0, 0, 0.05);
+    --form-border: rgba(0, 0, 0, 0.2);
+    --form-focus-bg: rgba(0, 0, 0, 0.08);
+    --transparent-box-bg: rgba(0, 0, 0, 0.05);
+    --transparent-box-border: rgba(0, 0, 0, 0.1);
+    --btn-warning: #f1c40f;
+    --btn-text-dark: #121212;
+    --link-color: #f39c12;
+    --link-hover: #d35400;
+  }
+
+/* Dark Theme */
+[data-theme="dark"] {
+  --bg-color: #121212;
+  --text-color: #f5f5f5;
+  --card-bg: rgba(255, 255, 255, 0.05);
+  --card-border: rgba(255, 255, 255, 0.1);
+  --form-bg: rgba(255, 255, 255, 0.08);
+  --form-border: rgba(255, 255, 255, 0.3);
+  --form-focus-bg: rgba(255, 255, 255, 0.12);
+  --transparent-box-bg: rgba(255, 255, 255, 0.18);
+  --transparent-box-border: rgba(255, 255, 255, 0.35);
+  --link-color: #f1c40f;
+  --link-hover: #ffe066;
+}
+
+  body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    transition: all 0.3s ease;
+  }
+
+  .card {
+    background: var(--card-bg);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--card-border);
+    border-radius: 15px;
+    box-shadow: 0 0 12px rgba(0, 0, 0, 0.05);
+    padding: 15px;
+    color: var(--text-color);
+  }
+
+  .transparent-box {
+    background-color: var(--transparent-box-bg);
+    border: 1px solid var(--transparent-box-border);
+    border-radius: 10px;
+    padding: 15px 20px;
+    margin-bottom: 20px;
+    color: var(--text-color);
+  }
+
+  .form-control,
+  .form-select {
+    background-color: var(--form-bg);
+    color: var(--text-color);
+    border: 1px solid var(--form-border);
+  }
+  .form-control:focus,
+  .form-select:focus {
+    border-color: var(--btn-warning);
+    box-shadow: 0 0 5px var(--btn-warning);
+    background-color: var(--form-focus-bg);
+    color: var(--text-color);
+  }
+  .form-control::placeholder {
+    color: var(--text-color);
+    opacity: 0.6;
+  }
+
+  .btn-warning {
+    background-color: var(--btn-warning);
+    color: var(--btn-text-dark);
+    border: none;
+  }
+  .btn-outline-light {
+    color: var(--text-color);
+    border-color: var(--text-color);
+  }
+  .btn-outline-light:hover {
+    background-color: var(--text-color);
+    color: var(--bg-color);
+  }
+
+  a {
+    color: var(--link-color);
+  }
+  a:hover {
+    color: var(--link-hover);
+    text-decoration: underline;
+  }
+
+  /* Responsive */
+  @media (max-width: 576px) {
+    .form-control,
+    .form-select {
+      font-size: 14px;
+    }
+    .btn {
+      font-size: 14px;
+      padding: 6px 10px;
+    }
+  }
+</style>
+
+
+<div class="d-flex justify-content-end mb-3">
+  <form method="get" class="w-100" style="max-width: 600px;">
+    <div class="row g-2">
+      <div class="col-md-4 col-12">
+        <input type="text" name="division" class="form-control" placeholder="Division" value="{{ request.GET.division }}">
+      </div>
+      <div class="col-md-4 col-12">
+        <input type="text" name="district" class="form-control" placeholder="District" value="{{ request.GET.district }}">
+      </div>
+      <div class="col-md-4 col-12">
+        <div class="input-group">
+          <input type="text" name="upazila" class="form-control" placeholder="Upazila" value="{{ request.GET.upazila }}">
+          <button type="submit" class="btn btn-warning">Search</button>
+          <a href="{% url 'issue_list' %}" class="btn btn-outline-light">⟲</a>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+
+<h2 class=gg"mb-4"> Public Issues Feed</h2>
+
+{% if user.is_authenticated and user.is_govt %}
+  <a href="{% url 'create_poll' %}" class="btn btn-warning mb-4">🗳️ Create New Poll</a>
+{% endif %}
+
+{% for issue in issues %}
+  <div class="card mb-4">
+    <div class="card-body">
+      <h5 class="card-title">{{ issue.title }}</h5>
+      <p class="card-text">{{ issue.description }}</p>
+
+      {% if issue.image %}
+        <img src="{{ issue.image.url }}" class="img-fluid mb-2" style="max-height: 300px;" alt="Issue Image">
+      {% endif %}
+
+      <div class="transparent-box">
+        <p class="mb-1">
+          <strong>Posted by:</strong>
+          {% if issue.anonymous %}
+            Anonymous
+          {% else %}
+            <a href="{% url 'profile' issue.user.username %}" style="color: var(--link-color)" class="text-decoration-none">
+              {{ issue.user.username }}
+            </a>
+          {% endif %} |
+          <strong>Location:</strong> {{ issue.division }}, {{ issue.district }}, {{ issue.upazila }}
+        </p>
+
+        <p class="mb-1"><strong>Status:</strong> {{ issue.get_status_display }}</p>
+      </div>
+
+      {% if user.is_authenticated and user.is_govt %}
+        <form method="POST" action="{% url 'update_status' issue.id %}" class="d-flex mb-2">
+          {% csrf_token %}
+          <select name="status" class="form-select form-select-sm me-2">
+            <option value="pending" {% if issue.status == 'pending' %}selected{% endif %}>Pending</option>
+            <option value="in_progress" {% if issue.status == 'in_progress' %}selected{% endif %}>In Progress</option>
+            <option value="resolved" {% if issue.status == 'resolved' %}selected{% endif %}>Resolved</option>
+          </select>
+          <button class="btn btn-sm btn-success">Update</button>
+        </form>
+      {% endif %}
+
+      <div class="d-flex justify-content-between align-items-center mt-2">
+        <div>❤️ <span id="like-count-{{ issue.id }}">{{ issue.likes.count }}</span></div>
+        <button class="btn btn-sm btn-outline-danger"
+                onclick="toggleLike({{ issue.id }})"
+                id="like-btn-{{ issue.id }}">
+          {% if issue.id in liked_ids %}Liked{% else %}Like{% endif %}
+        </button>
+      </div>
+
+      <div class="mt-3">
+        <form method="POST" action="{% url 'add_comment' issue.id %}" class="d-flex">
+          {% csrf_token %}
+          <input type="text" name="content" class="form-control me-2" placeholder="Write a comment..." required>
+          <button type="submit" class="btn btn-sm btn-primary">Post</button>
+        </form>
+
+        <div class="mt-2">
+          {% for comment in issue.comments.all %}
+            <div class="border p-2 mb-1 rounded">
+              <strong>
+                {% if issue.anonymous and comment.user == issue.user %}
+                  Anonymous
+                {% else %}
+                  {{ comment.user.username }}
+                {% endif %}
+              </strong>: {{ comment.content }}
+              <small class="text-muted"> - {{ comment.created_at|naturaltime }}</small>
+              {% if user.is_authenticated and user.is_govt %}
+                <form method="POST" action="{% url 'delete_comment' comment.id %}" class="d-inline">
+                  {% csrf_token %}
+                  <button type="submit" class="btn btn-sm btn-danger btn-link">Delete</button>
+                </form>
+              {% endif %}
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+
+      {% if user.is_authenticated and user.is_govt %}
+        <div class="text-end mt-3">
+          <a href="{% url 'edit_issue' issue.id %}" class="btn btn-sm btn-outline-primary">Edit</a>
+          <a href="{% url 'delete_issue' issue.id %}" class="btn btn-sm btn-outline-danger">Delete</a>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+{% empty %}
+  <p>No issues posted yet.</p>
+{% endfor %}
+
+<script>
+  function toggleLike(issueId) {
+    fetch(`/like/${issueId}/`)
+      .then(res => res.json())
+      .then(data => {
+        const countSpan = document.getElementById(`like-count-${issueId}`);
+        const btn = document.getElementById(`like-btn-${issueId}`);
+        countSpan.innerText = data.like_count;
+        btn.innerText = data.liked ? 'Liked' : ' Like';
+      });
+  }
+</script>
+
+{% endblock %}

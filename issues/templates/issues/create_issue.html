@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <style>
+    /* Form container stays white regardless of theme */
+    form {
+      background-color: #ffffff;  /* always white */
+      color: #121212;             /* dark text */
+      padding: 20px;
+      border-radius: 8px;
+      max-width: 500px;
+      margin: 0 auto;
+      border: 1px solid #cccccc;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+
+    /* Inputs, textarea, select */
+    form input, form textarea, form select {
+      background-color: rgba(0, 0, 0, 0.05); /* slight contrast */
+      border: 1px solid #121212;
+      color: #121212;
+      padding: 10px;
+      border-radius: 5px;
+      width: 100%;
+      margin-bottom: 15px;
+      font-size: 1rem;
+    }
+
+    form input::placeholder, form textarea::placeholder {
+      color: #555555;
+    }
+
+    /* Submit Button */
+    form button {
+      background-color: transparent;
+      border: 2px solid #ff9800;
+      color: #ff9800;
+      padding: 10px 20px;
+      border-radius: 30px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    form button:hover {
+      background-color: #ff9800;
+      color: #121212; /* black text on hover */
+    }
+
+    /* Page heading */
+    h2 {
+      text-align: center;
+      margin-bottom: 25px;
+      font-family: 'Finlandica', sans-serif;
+      color: var(--text-color);
+    }
+  </style>
+
+  <h2>Create Issue</h2>
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Submit Issue</button>
+  </form>
+{% endblock %}

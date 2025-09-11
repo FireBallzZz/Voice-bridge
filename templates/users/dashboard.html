@@ -1,0 +1,139 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<style>
+  /* Light Theme */
+  :root {
+    --bg-color: #ffffff;
+    --text-color: #121212;
+    --card-bg: rgba(0, 0, 0, 0.05);
+    --card-border: rgba(0, 0, 0, 0.1);
+    --table-bg: #ffffff;
+    --table-text: #121212;
+    --table-border: rgba(0, 0, 0, 0.2);
+  }
+
+  /* Dark Theme */
+  [data-theme="dark"] {
+    --bg-color: #0d0d10;
+    --text-color: #f5f5f5;
+    --card-bg: rgba(255, 255, 255, 0.05);
+    --card-border: rgba(255, 255, 255, 0.1);
+    --table-bg: rgba(255, 255, 255, 0.05);
+    --table-text: #f5f5f5;
+    --table-border: rgba(255, 255, 255, 0.15);
+  }
+
+  body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    transition: all 0.3s ease;
+  }
+
+  .dashboard-card {
+    background-color: var(--card-bg);
+    color: var(--text-color);
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    border: 1px solid var(--card-border);
+  }
+
+  .table {
+    background-color: var(--table-bg);
+    color: var(--table-text);
+    border-color: var(--table-border);
+  }
+
+  .table thead th {
+    background-color: var(--card-bg);
+    color: var(--text-color);
+  }
+
+  .badge {
+    padding: 0.5em 0.75em;
+    font-size: 0.9em;
+    border-radius: 8px;
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .dashboard-card {
+      padding: 1.2rem;
+    }
+    .table th, .table td {
+      font-size: 0.9rem;
+    }
+  }
+  @media (max-width: 576px) {
+    h2 {
+      font-size: 1.4rem;
+    }
+    h4 {
+      font-size: 1.2rem;
+    }
+    .table {
+      font-size: 0.85rem;
+    }
+  }
+</style>
+
+<div class="dashboard-card">
+    <h2 class="mb-3">👋 Welcome, <span style="color: var(--link-color, #f1c40f)">{{ user.username }}</span></h2>
+
+    <p class="fs-5">
+        <strong>Your role:</strong>
+        {% if user.is_govt %}
+            <span class="badge bg-info text-dark">Government User</span>
+        {% else %}
+            <span class="badge bg-secondary">Normal User</span>
+        {% endif %}
+    </p>
+
+    <hr>
+
+    {% if user.is_govt %}
+        <h4 class="mt-4 mb-3">🧾 Pending NID Verifications</h4>
+        {% if pending_users %}
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <th>Username</th>
+                            <th>NID Number</th>
+                            <th>Location</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for u in pending_users %}
+                            <tr>
+                                <td>{{ u.username }}</td>
+                                <td>{{ u.nid_number }}</td>
+                                <td>{{ u.division }}, {{ u.district }}, {{ u.upazila }}</td>
+                                <td>
+                                    <form method="POST" action="{% url 'approve_user' u.id %}">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-sm btn-success">✅ Approve</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <p class="text-muted">No pending NID verifications at the moment.</p>
+        {% endif %}
+    {% else %}
+        {% if not user.is_verified %}
+            <div class="alert alert-warning mt-4" role="alert">
+                <strong>Notice:</strong> Your account is not verified yet. Please go to your profile and submit your NID number to get verified by a government user.
+            </div>
+        {% else %}
+            <p class="mt-4">You are verified ✅. You can now create posts and comment freely.</p>
+        {% endif %}
+    {% endif %}
+</div>
+
+{% endblock %}
