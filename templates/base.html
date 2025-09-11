@@ -94,7 +94,7 @@
           <li class="nav-item"><a class="nav-link" href="{% url 'logout' %}">Logout</a></li>
         {% else %}
           <li class="nav-item"><a class="nav-link" href="{% url 'login' %}">Login</a></li>
-          <li class="nav-item"><a class="nav-link" href="{% url 'register' %}">Register</a></li>
+          <li class="nav-item"><a class="nav-link" href="{% url 'register' %}">Signup</a></li>
         {% endif %}
 
         <!-- Dark mode toggle as a normal nav-link -->
@@ -119,10 +119,9 @@
     &copy; 2025 The Voice Bridge. All Rights Reserved.
 </footer>
 
-<!-- Bootstrap JS -->
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
-<!-- Dark Mode Toggle Script -->
 <script>
   const toggleBtn = document.getElementById('theme-toggle');
   const body = document.body;

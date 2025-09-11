@@ -7,9 +7,9 @@ class CustomUser(AbstractUser):
     district = models.CharField(max_length=100, blank=True)
     upazila = models.CharField(max_length=100, blank=True)
     govt_code = models.CharField(max_length=50, blank=True)
-    bio = models.TextField(blank=True, null=True)  # ✅ Bio
-    profile_pic = models.ImageField(upload_to='profile_pics/', blank=True, null=True)  # ✅ Picture
+    bio = models.TextField(blank=True, null=True)
+    profile_pic = models.ImageField(upload_to='profile_pics/', blank=True, null=True)
 
-    # ✅ For verification system
+
     nid_number = models.CharField(max_length=20, blank=True, null=True)
     is_verified = models.BooleanField(default=False)

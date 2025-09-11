@@ -21,9 +21,9 @@
     --card-bg: rgba(255, 255, 255, 0.05);
     --card-border: rgba(255, 255, 255, 0.1);
 
-    --btn-outline-color: #f5f5f5;     /* white border + text */
-    --btn-outline-hover-bg: #f5f5f5;  /* hover bg white */
-    --btn-outline-hover-text: #000000; /* hover text black */
+    --btn-outline-color: #f5f5f5;
+    --btn-outline-hover-bg: #f5f5f5;
+    --btn-outline-hover-text: #000000;
   }
 
   body {
@@ -108,21 +108,20 @@
       <p><strong>NID Number:</strong> 🔒 Confidential</p>
     {% endif %}
 
-    {% if profile_user.is_verified %}
-      <span class="badge bg-success">✅ Verified</span>
-    {% else %}
-      <span class="badge bg-warning text-dark">⏳ Not Verified</span>
-    {% endif %}
-
     {% if profile_user.is_govt %}
       <span class="badge bg-primary">Government User</span>
     {% else %}
+      {% if profile_user.is_verified %}
+        <span class="badge bg-success">✅ Verified</span>
+      {% else %}
+        <span class="badge bg-warning text-dark">⏳ Not Verified</span>
+      {% endif %}
       <span class="badge bg-secondary">Normal User</span>
     {% endif %}
   </div>
 </div>
 
-{% if request.user == profile_user and not request.user.is_verified %}
+{% if request.user == profile_user and not request.user.is_verified and not request.user.is_govt %}
   <div class="card mb-4">
     <div class="card-body">
       <h5>🔐 Verify Your Profile</h5>

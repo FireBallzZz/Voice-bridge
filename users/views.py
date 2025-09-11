@@ -13,7 +13,7 @@ def profile_view(request, username):
     user_obj = get_object_or_404(CustomUser, username=username)
     posts = Issue.objects.filter(user=user_obj).order_by('-created_at')
 
-    is_own_profile = request.user == user_obj  # 👈 Check if viewing own profile
+    is_own_profile = request.user == user_obj
 
     return render(request, 'users/profile.html', {
         'profile_user': user_obj,
@@ -68,7 +68,7 @@ def dashboard(request):
     if request.user.is_govt:
         unverified_users = CustomUser.objects.filter(is_govt=False, is_verified=False).exclude(nid_number__isnull=True)
 
-        # ✅ NEW: Count of issues in last 30 days by location
+
         last_30_days = timezone.now() - timedelta(days=30)
         from django.db.models import Count
         issue_summary = Issue.objects.filter(created_at__gte=last_30_days).values(
@@ -84,7 +84,7 @@ def dashboard(request):
         return render(request, 'users/dashboard.html', {'pending_users': pending_users})
 
 
-# ✅ Step 5: NID submission view (user side)
+
 @login_required
 def submit_nid(request):
     if request.method == 'POST':
@@ -97,7 +97,7 @@ def submit_nid(request):
             messages.error(request, "❌ Please enter a valid NID.")
     return redirect('profile', username=request.user.username)
 
-# ✅ Step 5: Govt side – approve verification
+
 @login_required
 def approve_user(request, user_id):
     if not request.user.is_govt:
