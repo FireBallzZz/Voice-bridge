@@ -40,6 +40,8 @@ def edit_profile(request):
 def home(request):
     return render(request, 'users/home.html')
 
+def about(request):
+    return render(request, 'users/about.html')
 
 def login_view(request):
     if request.method == 'POST':

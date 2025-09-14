@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+  html { scroll-behavior: smooth; }
+
+  /* Override Bootstrap container */
+  .content-wrapper .container {
+    max-width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  /* Section Styling */
+  section {
+    height: 100vh; /* full screen height */
+    width: 100%;   /* full screen width */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 20px;
+    color: #fff;
+    text-align: center;
+  }
+
+  section h2 {
+    font-size: 3rem;
+    margin-bottom: 20px;
+    font-family: 'PT Serif', serif;
+  }
+
+  section p {
+    max-width: 900px;
+    font-size: 1.3rem;
+    line-height: 1.8;
+    font-family: 'Finlandica', sans-serif;
+  }
+
+  /* Unique Backgrounds */
+  #transparency {
+    background: linear-gradient(135deg, #1abc9c, #16a085);
+  }
+
+  #citizen {
+    background: linear-gradient(135deg, #2980b9, #2c3e50);
+  }
+
+  #govt {
+    background: linear-gradient(135deg, #8e44ad, #2c3e50);
+  }
+
+  /* Icons */
+  .section-icon {
+    font-size: 4rem;
+    margin-bottom: 25px;
+    color: #ffc107;
+  }
+</style>
+
+<div id="about-section">
+  <section id="transparency">
+    <i class="fas fa-search section-icon"></i>
+    <h2>Transparency</h2>
+    <p>
+      Transparency builds trust between citizens and leaders.
+      Every issue, poll, and government response remains open and visible,
+      enabling people to stay informed and hold institutions accountable.
+    </p>
+  </section>
+
+  <section id="citizen">
+    <i class="fas fa-users section-icon"></i>
+    <h2>Citizen Power</h2>
+    <p>
+      The Voice Bridge gives citizens the ability to raise their voices, propose
+      solutions, and unite around important issues. Communities gain the strength
+      to influence policies and drive real change in society.
+    </p>
+  </section>
+
+  <section id="govt">
+    <i class="fas fa-university section-icon"></i>
+    <h2>Government Power</h2>
+    <p>
+      Governments use The Voice Bridge to listen, engage, and prioritize issues
+      that reflect real needs. This dialogue creates stronger democracies
+      where decisions are shaped by the people.
+    </p>
+  </section>
+</div>
+{% endblock %}

@@ -1,51 +1,74 @@
 {% extends 'base.html' %}
 {% block content %}
 {% load static %}
+
 <style>
+  :root {
+    --bg-color: #E6F4EC;
+    --text-color: #121212;
+    --btn-color: #ffffff;
+    --btn-bg-hover: #000000;
+  }
+
+  [data-theme="dark"] {
+    --bg-color: #121212;
+    --text-color: #f5f5f5;
+    --btn-color: #f5f5f5;
+    --btn-bg-hover: #ffffff;
+  }
+
   body {
     background-color: var(--bg-color);
     color: var(--text-color);
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     margin: 0;
     min-height: 100vh;
-    display: flex;
-    flex-direction: column;
   }
 
- .hero-section {
-    flex: 1;
+  /* Hero Section */
+  .hero-section {
     display: flex;
     align-items: center;
     justify-content: space-between;
     padding: 100px 50px;
     background-image: url("{% static 'images/3.jpg' %}");
-    background-size: 100% auto; /* Width full hobe */
+    background-size: cover;
     background-position: center;
-    background-repeat: no-repeat;
-    position: relative;
     color: white;
-}
+    position: relative;
+  }
 
+  .hero-section::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-color: rgba(0,0,0,0.4); /* overlay */
+    z-index: 0;
+  }
 
-.hero-text h1 {
+  .hero-section > * {
+    position: relative;
+    z-index: 1;
+  }
+
+  .hero-text h1 {
     font-family: 'PT Serif', serif;
     font-size: 3rem;
     font-weight: 700;
     margin: 0;
     line-height: 1.2;
-}
+  }
 
   .hero-text h1 span {
     display: block;
   }
 
- .hero-subtitle {
+  .hero-subtitle {
     font-family: 'Finlandica', sans-serif;
     font-size: 1.2rem;
     margin-top: 15px;
-    color: #f0f0f0;
     font-weight: 400;
-}
+  }
 
   .hero-buttons {
     margin-top: 30px;
@@ -63,16 +86,63 @@
     border-radius: 8px;
     font-weight: 600;
     font-size: 1rem;
-    color: #ffffff !important;
-    border: 2px solid #ffffff;
+    color: var(--btn-color) !important;
+    border: 2px solid var(--btn-color);
     background-color: transparent;
     transition: background-color 0.2s, color 0.2s, transform 0.2s;
   }
 
   .hero-buttons a:hover {
-    background-color: #ffffff;
-    color: #000000 !important;
+    background-color: var(--btn-color);
+    color: var(--btn-bg-hover) !important;
     transform: translateY(-3px);
+  }
+
+  /* About Section */
+  .about-section {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    text-align: center;
+    padding: 200px 20px 20px 20px;
+  }
+
+  .about-section h2 {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 40px;
+    position: relative;
+    display: inline-block;
+  }
+
+  .about-section h2::after {
+    content: "";
+    display: block;
+    width: 80px;
+    height: 2px;
+    background-color: #0EA04B;
+    margin: 10px auto 0;
+    border-radius: 2px;
+  }
+
+  .about-items {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .about-item {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+    font-size: 1.2rem;
+    font-weight: 600;
+  }
+
+  .about-item i {
+    font-size: 1.8rem;
+    color: #0EA04B;
   }
 
   @media (min-width: 768px) {
@@ -80,45 +150,94 @@
       flex-direction: row;
       text-align: left;
       justify-content: space-between;
-      padding: 100px 50px;
     }
 
     .hero-text {
       max-width: 600px;
     }
+
     .hero-line {
       width: 500px;
       height: 2px;
       background-color: #0EA04B;
       margin: 20px 0;
       border-radius: 2px;
-   }
+    }
+
     .hero-buttons {
       max-width: 250px;
       align-items: flex-start;
     }
+
+    .about-items {
+      flex-direction: row;
+    }
+  }
+
+  @media (max-width: 576px) {
+    .hero-section {
+      flex-direction: column;
+      text-align: center;
+      padding: 80px 20px;
+    }
+
+    .hero-buttons {
+      max-width: 100%;
+      align-items: center;
+    }
+
+    .hero-text h1 {
+      font-size: 2rem;
+    }
+
+    .hero-subtitle {
+      font-size: 1rem;
+    }
   }
 </style>
 
-
 <div class="hero-section">
-<div class="hero-text">
-  <h1>
-    <span>Raise Your Voice,</span>
-    <span>Shape Your Future</span>
-  </h1>
-  <div class="hero-line"></div>
-  <p class="hero-subtitle">A Digital Bridge Between Citizens and Decision-Makers</p>
-</div>
+  <div class="hero-text">
+    <h1>
+      <span>Raise Your Voice,</span>
+      <span>Shape Your Future</span>
+    </h1>
+    <div class="hero-line"></div>
+    <p class="hero-subtitle">A Digital Bridge Between Citizens and Decision-Makers</p>
+  </div>
+
   <div class="hero-buttons">
     {% if user.is_authenticated %}
-      <a href="{% url 'create_issue' %}"> Post an Issue</a>
-      <a href="{% url 'issue_list' %}"> View Issues</a>
+      <a href="{% url 'create_issue' %}">Post an Issue</a>
+      <a href="{% url 'issue_list' %}">View Issues</a>
     {% else %}
       <a href="{% url 'login' %}">Login to Post</a>
       <a href="{% url 'issue_list' %}">View Issues</a>
     {% endif %}
   </div>
 </div>
+
+<!-- About Section -->
+<div class="about-section">
+  <h2>About</h2>
+  <div class="about-items">
+    <div class="about-item">
+      <i class="fas fa-search"></i>
+      <a href="{% url 'about' %}#transparency" class="nav-link">Transparency</a>
+    </div>
+    <div class="about-item">
+      <i class="fas fa-user"></i>
+      <a href="{% url 'about' %}#citizen" class="nav-link">Citizen Power</a>
+    </div>
+    <div class="about-item">
+      <i class="fas fa-university"></i>
+      <a href="{% url 'about' %}#govt" class="nav-link">Government Power</a>
+    </div>
+  </div>
+</div>
+
+
+<!-- FontAwesome -->
+<script src="https://kit.fontawesome.com/yourkitid.js" crossorigin="anonymous"></script>
 
 {% endblock %}
