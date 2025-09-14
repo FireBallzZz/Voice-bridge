@@ -1,12 +1,15 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+
+from issues.forms import IssueForm
 from .forms import CustomUserCreationForm, LoginForm, EditProfileForm
 from issues.models import Issue
 from .models import CustomUser
 from django.contrib import messages
 from django.utils import timezone
 from datetime import timedelta
+
 
 @login_required
 def profile_view(request, username):
@@ -21,6 +24,7 @@ def profile_view(request, username):
         'is_own_profile': is_own_profile
     })
 
+
 @login_required
 def edit_profile(request):
     if request.method == 'POST':
@@ -32,8 +36,10 @@ def edit_profile(request):
         form = EditProfileForm(instance=request.user)
     return render(request, 'users/edit_profile.html', {'form': form})
 
+
 def home(request):
     return render(request, 'users/home.html')
+
 
 def login_view(request):
     if request.method == 'POST':
@@ -49,9 +55,11 @@ def login_view(request):
         form = LoginForm()
     return render(request, 'users/login.html', {'form': form})
 
+
 def logout_view(request):
     logout(request)
     return redirect('home')
+
 
 def register_view(request):
     if request.method == 'POST':
@@ -63,11 +71,11 @@ def register_view(request):
         form = CustomUserCreationForm()
     return render(request, 'users/register.html', {'form': form})
 
+
 @login_required
 def dashboard(request):
     if request.user.is_govt:
         unverified_users = CustomUser.objects.filter(is_govt=False, is_verified=False).exclude(nid_number__isnull=True)
-
 
         last_30_days = timezone.now() - timedelta(days=30)
         from django.db.models import Count
@@ -82,7 +90,6 @@ def dashboard(request):
     else:
         pending_users = CustomUser.objects.filter(is_govt=False, is_verified=False).exclude(nid_number__isnull=True)
         return render(request, 'users/dashboard.html', {'pending_users': pending_users})
-
 
 
 @login_required
@@ -108,3 +115,31 @@ def approve_user(request, user_id):
     user_to_verify.save()
     messages.success(request, f"✅ {user_to_verify.username} is now verified.")
     return redirect('dashboard')
+
+
+# ----------------------------
+# ✅ User can edit/delete own post
+# ----------------------------
+@login_required
+def post_edit(request, post_id):
+    post = get_object_or_404(Issue, id=post_id, user=request.user)  # only own post
+    if request.method == 'POST':
+        form = IssueForm(request.POST, request.FILES, instance=post)
+        if form.is_valid():
+            form.save()
+            return redirect('profile', username=request.user.username)
+    else:
+        form = IssueForm(instance=post)   # 👈 ekhane important
+    return render(request, 'users/post_edit.html', {'form': form})
+
+
+@login_required
+def post_delete(request, post_id):
+    post = get_object_or_404(Issue, id=post_id, user=request.user)  # only own post
+
+    if request.method == 'POST':
+        post.delete()
+        messages.success(request, "🗑️ Post deleted successfully!")
+        return redirect('profile', username=request.user.username)
+
+    return render(request, 'users/post_delete.html', {'post': post})

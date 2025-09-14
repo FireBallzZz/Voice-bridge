@@ -4,11 +4,11 @@
 {% block content %}
 
 <style>
-  /* Light Theme */
-  :root {
-    --bg-color: #ffffff;
+  /* Base light theme */
+  body {
+    --bg-color: #E6F4EC;
     --text-color: #121212;
-    --card-bg:  #FFFFFF00;
+    --card-bg: #FFFFFF;
     --card-border: rgba(255, 255, 255, 0.35);
     --form-bg: rgba(0, 0, 0, 0.05);
     --form-border: rgba(0, 0, 0, 0.2);
@@ -21,21 +21,22 @@
     --link-hover: #d35400;
   }
 
-/* Dark Theme */
-[data-theme="dark"] {
-  --bg-color: #121212;
-  --text-color: #f5f5f5;
-  --card-bg: rgba(255, 255, 255, 0.05);
-  --card-border: rgba(255, 255, 255, 0.1);
-  --form-bg: rgba(255, 255, 255, 0.08);
-  --form-border: rgba(255, 255, 255, 0.3);
-  --form-focus-bg: rgba(255, 255, 255, 0.12);
-  --transparent-box-bg: rgba(255, 255, 255, 0.18);
-  --transparent-box-border: rgba(255, 255, 255, 0.35);
-  --link-color: #f1c40f;
-  --link-hover: #ffe066;
-}
+  /* Dark theme overrides */
+  body.dark-theme {
+    --bg-color: #121212;
+    --text-color: #f5f5f5;
+    --card-bg: rgba(255, 255, 255, 0.05);
+    --card-border: rgba(255, 255, 255, 0.1);
+    --form-bg: rgba(255, 255, 255, 0.08);
+    --form-border: rgba(255, 255, 255, 0.3);
+    --form-focus-bg: rgba(255, 255, 255, 0.12);
+    --transparent-box-bg: rgba(255, 255, 255, 0.18);
+    --transparent-box-border: rgba(255, 255, 255, 0.35);
+    --link-color: #f1c40f;
+    --link-hover: #ffe066;
+  }
 
+  /* Apply variables */
   body {
     background-color: var(--bg-color);
     color: var(--text-color);
@@ -50,6 +51,7 @@
     box-shadow: 0 0 12px rgba(0, 0, 0, 0.05);
     padding: 15px;
     color: var(--text-color);
+    transition: background 0.3s, border-color 0.3s, color 0.3s;
   }
 
   .transparent-box {
@@ -59,6 +61,7 @@
     padding: 15px 20px;
     margin-bottom: 20px;
     color: var(--text-color);
+    transition: background 0.3s, border-color 0.3s, color 0.3s;
   }
 
   .form-control,
@@ -66,7 +69,9 @@
     background-color: var(--form-bg);
     color: var(--text-color);
     border: 1px solid var(--form-border);
+    transition: all 0.3s;
   }
+
   .form-control:focus,
   .form-select:focus {
     border-color: var(--btn-warning);
@@ -74,6 +79,7 @@
     background-color: var(--form-focus-bg);
     color: var(--text-color);
   }
+
   .form-control::placeholder {
     color: var(--text-color);
     opacity: 0.6;
@@ -84,6 +90,7 @@
     color: var(--btn-text-dark);
     border: none;
   }
+
   .btn-outline-light {
     color: var(--text-color);
     border-color: var(--text-color);
@@ -114,7 +121,6 @@
   }
 </style>
 
-
 <div class="d-flex justify-content-end mb-3">
   <form method="get" class="w-100" style="max-width: 600px;">
     <div class="row g-2">
@@ -135,7 +141,7 @@
   </form>
 </div>
 
-<h2 class=gg"mb-4"> Public Issues Feed</h2>
+<h2 class="mb-4">Public Issues Feed</h2>
 
 {% if user.is_authenticated and user.is_govt %}
   <a href="{% url 'create_poll' %}" class="btn btn-warning mb-4">🗳️ Create New Poll</a>
@@ -154,14 +160,12 @@
       <div class="transparent-box">
         <p class="mb-1">
           <strong>Posted by:</strong>
-          {% if issue.anonymous %}
-            Anonymous
-          {% else %}
-            <a href="{% url 'profile' issue.user.username %}" style="color: var(--link-color)" class="text-decoration-none">
+          {% if issue.anonymous %}Anonymous{% else %}
+            <a href="{% url 'profile' issue.user.username %}" class="text-decoration-none" style="color: var(--link-color)">
               {{ issue.user.username }}
             </a>
-          {% endif %} |
-          <strong>Location:</strong> {{ issue.division }}, {{ issue.district }}, {{ issue.upazila }}
+          {% endif %}
+          | <strong>Location:</strong> {{ issue.division }}, {{ issue.district }}, {{ issue.upazila }}
         </p>
 
         <p class="mb-1"><strong>Status:</strong> {{ issue.get_status_display }}</p>
@@ -181,9 +185,7 @@
 
       <div class="d-flex justify-content-between align-items-center mt-2">
         <div>❤️ <span id="like-count-{{ issue.id }}">{{ issue.likes.count }}</span></div>
-        <button class="btn btn-sm btn-outline-danger"
-                onclick="toggleLike({{ issue.id }})"
-                id="like-btn-{{ issue.id }}">
+        <button class="btn btn-sm btn-outline-danger" onclick="toggleLike({{ issue.id }})" id="like-btn-{{ issue.id }}">
           {% if issue.id in liked_ids %}Liked{% else %}Like{% endif %}
         </button>
       </div>
@@ -199,11 +201,7 @@
           {% for comment in issue.comments.all %}
             <div class="border p-2 mb-1 rounded">
               <strong>
-                {% if issue.anonymous and comment.user == issue.user %}
-                  Anonymous
-                {% else %}
-                  {{ comment.user.username }}
-                {% endif %}
+                {% if issue.anonymous and comment.user == issue.user %}Anonymous{% else %}{{ comment.user.username }}{% endif %}
               </strong>: {{ comment.content }}
               <small class="text-muted"> - {{ comment.created_at|naturaltime }}</small>
               {% if user.is_authenticated and user.is_govt %}
@@ -237,7 +235,7 @@
         const countSpan = document.getElementById(`like-count-${issueId}`);
         const btn = document.getElementById(`like-btn-${issueId}`);
         countSpan.innerText = data.like_count;
-        btn.innerText = data.liked ? 'Liked' : ' Like';
+        btn.innerText = data.liked ? 'Liked' : 'Like';
       });
   }
 </script>

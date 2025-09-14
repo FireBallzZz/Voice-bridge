@@ -6,13 +6,14 @@
   :root {
     --bg-color: #ffffff;
     --text-color: #121212;
-    --card-bg: rgba(0, 0, 0, 0.05);
+    --card-bg: #ffffff;
     --card-border: rgba(0, 0, 0, 0.1);
     --table-bg: #ffffff;
     --table-text: #121212;
-    --table-border: rgba(0, 0, 0, 0.2);
+    --table-border: rgba(0, 0, 0, 0.15);
     --alert-info-bg: #e9f5ff;
     --alert-info-text: #0c5460;
+    --section-title: #2c3e50;
   }
 
   /* Dark Theme */
@@ -26,6 +27,7 @@
     --table-border: rgba(255, 255, 255, 0.15);
     --alert-info-bg: rgba(0, 123, 255, 0.1);
     --alert-info-text: #d0e9ff;
+    --section-title: #1abc9c;
   }
 
   body {
@@ -34,10 +36,25 @@
     transition: all 0.3s ease;
   }
 
+  h2, h4 {
+    font-weight: 600;
+    color: var(--section-title);
+  }
+
+  .dashboard-section {
+    margin-bottom: 2.5rem;
+  }
+
   .card {
     background-color: var(--card-bg);
     border: 1px solid var(--card-border);
-    border-radius: 10px;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    transition: transform 0.2s ease;
+  }
+
+  .card:hover {
+    transform: translateY(-2px);
   }
 
   .list-group-item {
@@ -55,21 +72,23 @@
   .table thead th {
     background-color: var(--card-bg);
     color: var(--text-color);
+    font-weight: 600;
   }
 
   .alert-info {
     background-color: var(--alert-info-bg);
     color: var(--alert-info-text);
-    border: none;
+    border-radius: 10px;
+    padding: 1rem;
   }
 
   /* Responsive Adjustments */
   @media (max-width: 768px) {
     h2, h4 {
-      font-size: 1.3rem;
+      font-size: 1.2rem;
     }
     .table th, .table td {
-      font-size: 0.9rem;
+      font-size: 0.85rem;
     }
     .list-group-item {
       flex-direction: column;
@@ -85,55 +104,69 @@
   }
 </style>
 
-<h2 class="mb-4">Admin User Dashboard</h2>
+<div class="container-fluid">
 
-{% if unverified_users %}
-  <div class="card p-3 mb-3">
-    <h4 style="color: var(--link-color, #f1c40f)">Users Awaiting Verification</h4>
-    <ul class="list-group list-group-flush">
-      {% for user in unverified_users %}
-        <li class="list-group-item d-flex justify-content-between align-items-center">
-          <div>
-            <strong>{{ user.username }}</strong> - NID: {{ user.nid_number }}
-          </div>
-          <form method="POST" action="{% url 'approve_user' user.id %}">
-            {% csrf_token %}
-            <button class="btn btn-success btn-sm">✅ Approve</button>
-          </form>
-        </li>
-      {% endfor %}
-    </ul>
-  </div>
-{% else %}
-  <div class="alert alert-info">No users waiting for verification.</div>
-{% endif %}
+  <!-- Page Title -->
+  <h2 class="mb-4">⚙️ Admin User Dashboard</h2>
 
-<h4 class="mt-5 mb-3" style="color: #17a2b8;">📍 Issue Summary (Last 30 Days)</h4>
-{% if issue_summary %}
-  <div class="table-responsive">
-    <table class="table table-bordered table-hover">
-      <thead>
-        <tr>
-          <th>Division</th>
-          <th>District</th>
-          <th>Upazila</th>
-          <th>Total Issues</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for item in issue_summary %}
-          <tr>
-            <td>{{ item.division }}</td>
-            <td>{{ item.district }}</td>
-            <td>{{ item.upazila }}</td>
-            <td>{{ item.total }}</td>
-          </tr>
-        {% endfor %}
-      </tbody>
-    </table>
+  <!-- Section: User Verification -->
+  <div class="dashboard-section">
+    <h4 class="mb-3">👥 Users Awaiting Verification</h4>
+    {% if unverified_users %}
+      <div class="card p-3">
+        <ul class="list-group list-group-flush">
+          {% for user in unverified_users %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              <div>
+                <strong>{{ user.username }}</strong> <br>
+                <small>NID: {{ user.nid_number }}</small>
+              </div>
+              <form method="POST" action="{% url 'approve_user' user.id %}">
+                {% csrf_token %}
+                <button class="btn btn-success btn-sm">✅ Approve</button>
+              </form>
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+    {% else %}
+      <div class="alert alert-info">No users waiting for verification.</div>
+    {% endif %}
   </div>
-{% else %}
-  <p class="text-muted">No issues reported in the last 30 days.</p>
-{% endif %}
+
+  <!-- Section: Issue Summary -->
+  <div class="dashboard-section">
+    <h4 class="mb-3">📍 Issue Summary (Last 30 Days)</h4>
+    {% if issue_summary %}
+      <div class="card p-3">
+        <div class="table-responsive">
+          <table class="table table-bordered table-hover">
+            <thead>
+              <tr>
+                <th>Division</th>
+                <th>District</th>
+                <th>Upazila</th>
+                <th>Total Issues</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for item in issue_summary %}
+                <tr>
+                  <td>{{ item.division }}</td>
+                  <td>{{ item.district }}</td>
+                  <td>{{ item.upazila }}</td>
+                  <td>{{ item.total }}</td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    {% else %}
+      <p class="text-muted">No issues reported in the last 30 days.</p>
+    {% endif %}
+  </div>
+
+</div>
 
 {% endblock %}

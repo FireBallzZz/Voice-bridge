@@ -1,28 +1,30 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block content %}
 
 <style>
-  /* Light Theme */
-  :root {
+  /* Light Theme Variables */
+  body {
     --bg-color: #ffffff;
     --text-color: #121212;
-    --card-bg: rgba(0, 0, 0, 0.05);
+    --card-bg: #C7F4DA;
     --card-border: rgba(0, 0, 0, 0.1);
-    --transparent-box-bg: rgba(0, 0, 0, 0.05);
+    --transparent-box-bg: #FFFFFF;
     --transparent-box-border: rgba(0, 0, 0, 0.1);
     --btn-primary-color: #0d6efd;
     --btn-primary-text: #ffffff;
     --btn-custom-border: #000000;
     --btn-custom-text: #121212;
+    transition: all 0.3s ease;
   }
 
-  /* Dark Theme */
-  [data-theme="dark"] {
+  /* Dark Theme Overrides */
+  body.dark-theme {
     --bg-color: #121212;
-    --text-color: #ffffff;
-    --card-bg: #ffffff; /* slightly transparent for dark mode */
+    --text-color: #f5f5f5;
+    --card-bg: rgba(25, 25, 25, 0.85);
     --card-border: rgba(255, 255, 255, 0.15);
-    --transparent-box-bg: #ffffff;
+    --transparent-box-bg: rgba(40, 40, 40, 0.75);
     --transparent-box-border: rgba(255, 255, 255, 0.15);
     --btn-primary-color: #0d6efd;
     --btn-primary-text: #ffffff;
@@ -31,9 +33,20 @@
   }
 
   body {
-    background-color: var(--bg-color);
+    background: url("{% static 'images/7.png' %}") no-repeat center center;
+    background-size: cover;
+    background-attachment: scroll;
     color: var(--text-color);
-    transition: all 0.3s ease;
+    min-height: 100vh;
+    position: relative;
+  }
+
+  body::before {
+    content: "";
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.4); /* overlay for readability */
+    z-index: -1;
   }
 
   /* Cards */
@@ -56,7 +69,6 @@
     transition: all 0.3s ease;
   }
 
-  /* Transparent box */
   .transparent-box {
     background-color: var(--transparent-box-bg);
     border: 1px solid var(--transparent-box-border);
@@ -66,7 +78,6 @@
     transition: all 0.3s ease;
   }
 
-  /* Buttons */
   .custom-poll-btn {
     background-color: transparent;
     color: var(--btn-custom-text);
@@ -79,7 +90,6 @@
 
   .custom-poll-btn:hover {
     background-color: rgba(255, 193, 7, 0.2);
-    color: var(--btn-custom-text);
     box-shadow: 0 4px 10px rgba(255, 193, 7, 0.3);
   }
 
@@ -104,10 +114,9 @@
   }
 
   .alert {
-    color: #000; /* readable in both themes */
+    color: #000;
   }
 
-  /* Responsive */
   @media (max-width: 576px) {
     .custom-poll-btn, .poll-action-btn {
       font-size: 14px;
@@ -140,18 +149,22 @@
 
       <!-- Voting Box -->
       <div class="transparent-box">
-        <form method="POST" action="{% url 'vote_poll' poll.id %}">
-          {% csrf_token %}
-          {% for option in poll.get_options %}
-            <div class="form-check">
-              <input class="form-check-input" type="radio" name="choice" value="{{ option }}" id="{{ option }}{{ poll.id }}">
-              <label class="form-check-label" for="{{ option }}{{ poll.id }}">{{ option }}</label>
+        {% if poll.user_has_voted %}
+          <p class="text-success">✅ You have already voted.</p>
+        {% else %}
+          <form method="POST" action="{% url 'vote_poll' poll.id %}">
+            {% csrf_token %}
+            {% for option in poll.get_options %}
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="choice" value="{{ option }}" id="{{ option }}{{ poll.id }}">
+                <label class="form-check-label" for="{{ option }}{{ poll.id }}">{{ option }}</label>
+              </div>
+            {% endfor %}
+            <div class="text-end mt-3">
+              <button type="submit" class="btn custom-poll-btn">Vote</button>
             </div>
-          {% endfor %}
-          <div class="text-end mt-3">
-            <button type="submit" class="btn custom-poll-btn">Vote</button>
-          </div>
-        </form>
+          </form>
+        {% endif %}
       </div>
 
       <!-- Results Box -->
@@ -185,7 +198,6 @@
         </ul>
       </div>
 
-      <!-- Edit/Delete -->
       {% if user.is_authenticated and user == poll.created_by %}
         <div class="mt-3 text-end">
           <a href="{% url 'edit_poll' poll.id %}" class="poll-action-btn">✏️ Edit</a>

@@ -12,18 +12,20 @@
     flex-direction: column;
   }
 
-  .hero-section {
+ .hero-section {
     flex: 1;
     display: flex;
     align-items: center;
     justify-content: space-between;
     padding: 100px 50px;
     background-image: url("{% static 'images/3.jpg' %}");
-    background-size: cover;
+    background-size: 100% auto; /* Width full hobe */
     background-position: center;
+    background-repeat: no-repeat;
     position: relative;
     color: white;
-  }
+}
+
 
 .hero-text h1 {
     font-family: 'PT Serif', serif;

@@ -47,18 +47,26 @@ def poll_list(request):
 def vote_poll(request, poll_id):
     poll = get_object_or_404(Poll, id=poll_id)
 
+    # Check if user already voted
+    existing_vote = Vote.objects.filter(user=request.user, poll=poll).first()
+    if existing_vote:
+        messages.error(request, "⚠️ You have already voted. You cannot change your vote.")
+        return redirect('poll_list')
+
+    # New vote submission
     choice = request.POST.get('choice')
     if choice:
-        Vote.objects.update_or_create(
+        Vote.objects.create(
             user=request.user,
             poll=poll,
-            defaults={'choice': choice}
+            choice=choice
         )
         messages.success(request, "✅ Your vote has been submitted!")
     else:
         messages.error(request, "⚠️ Please select an option before submitting.")
 
     return redirect('poll_list')
+
 @login_required
 def edit_poll(request, poll_id):
     poll = get_object_or_404(Poll, id=poll_id, created_by=request.user)

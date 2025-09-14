@@ -1,0 +1,155 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<style>
+  :root {
+    --bg-dark: #0d0d10;
+    --bg-light: #f5f5f5;
+    --text-dark: #121212;
+    --text-light: #f5f5f5;
+    --card-dark: rgba(255, 255, 255, 0.05);
+    --card-light: #ffffff;
+    --border-dark: rgba(255, 255, 255, 0.1);
+    --border-light: #ccc;
+    --btn-text: #000;
+    --btn-border: #555;
+    --btn-bg-hover: rgba(0,0,0,0.1);
+  }
+
+  body[data-theme="dark"] {
+    background-color: var(--bg-dark);
+    color: var(--text-light);
+  }
+  body[data-theme="light"] {
+    background-color: var(--bg-light);
+    color: var(--text-dark);
+  }
+
+  .card {
+    border-radius: 12px;
+    margin: 2rem auto;
+    padding: 2rem;
+    max-width: 800px;
+    border: 1px solid;
+    background-color: var(--card-light);
+    border-color: var(--border-light);
+    color: var(--text-dark);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  }
+
+  body[data-theme="dark"] .card {
+    background-color: var(--card-dark);
+    border-color: var(--border-dark);
+    color: var(--text-light);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+  }
+
+  .danger-title {
+    font-weight: 700;
+    margin-bottom: 8px;
+    font-size: 1.5rem;
+  }
+
+  .post-preview {
+    border-radius: 8px;
+    padding: 1rem;
+    margin-top: 1rem;
+    background: rgba(0,0,0,0.03);
+  }
+  body[data-theme="dark"] .post-preview {
+    background: rgba(255,255,255,0.02);
+  }
+
+  img {
+    max-width: 100%;
+    max-height: 250px;
+    border-radius: 8px;
+    display: block;
+    margin-top: 10px;
+  }
+
+  .btn-confirm-delete, .btn-cancel {
+    padding: 10px 18px;
+    border-radius: 8px;
+    font-weight: 600;
+    border: 1px solid var(--btn-border);
+    cursor: pointer;
+    transition: 0.3s;
+    text-decoration: none;
+    font-size: 14px;
+  }
+
+  .btn-confirm-delete {
+    background-color: transparent;
+    color: var(--btn-text);
+    border-color: var(--btn-border);
+  }
+
+  .btn-confirm-delete:hover {
+    background-color: var(--btn-bg-hover);
+  }
+
+  .btn-cancel {
+    background-color: transparent;
+    color: var(--btn-text);
+    border-color: var(--btn-border);
+    margin-left: 10px;
+  }
+
+  .btn-cancel:hover {
+    background-color: var(--btn-bg-hover);
+  }
+
+  /* Responsive adjustments */
+  @media (max-width: 600px) {
+    .card {
+      padding: 1rem;
+    }
+    .btn-confirm-delete, .btn-cancel {
+      width: 100%;
+      margin-left: 0;
+      margin-top: 0.5rem;
+    }
+    .form-buttons {
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+  }
+</style>
+
+<div class="card">
+  {% if messages %}
+    <div class="msg">
+      {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+          {{ message }}
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  <h3 class="danger-title">Delete Post</h3>
+  <p>Are you sure you want to permanently delete this post? This action cannot be undone.</p>
+
+  <div class="post-preview">
+    <h5>{{ post.title }}</h5>
+    <p>{{ post.description|linebreaksbr }}</p>
+
+    {% if post.image %}
+      <img src="{{ post.image.url }}" alt="post image">
+    {% endif %}
+
+    <p><small>Created at: {{ post.created_at }}</small></p>
+  </div>
+
+  <form method="post" class="mt-3">
+    {% csrf_token %}
+    <div class="form-buttons" style="display:flex; flex-wrap:wrap;">
+      <button type="submit" class="btn-confirm-delete">Yes, delete this post</button>
+      <a href="{% url 'profile' request.user.username %}" class="btn-cancel">Cancel</a>
+    </div>
+  </form>
+</div>
+
+{% endblock %}

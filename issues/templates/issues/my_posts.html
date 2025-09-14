@@ -4,55 +4,137 @@
 <style>
   :root {
     --bg-dark: #0d0d10;
-    --bg-light: #f5f5f5;
+    --bg-light: #E6F4EC;
     --text-dark: #121212;
     --text-light: #f5f5f5;
     --card-dark: rgba(255, 255, 255, 0.05);
-    --card-light: #ffffff;
+    --card-light: #f5f5f5;
     --border-dark: rgba(255, 255, 255, 0.1);
     --border-light: #ccc;
+    --btn-bg: rgba(0, 0, 0, 0.1);
+    --btn-bg-hover: rgba(0, 0, 0, 0.2);
+    --btn-text: inherit;
   }
 
-  body[data-theme="dark"] {
+  /* Apply background and text based on dark-theme class from base.html */
+  body {
+    background-color: var(--bg-light);
+    color: var(--text-dark);
+    transition: background-color 0.3s, color 0.3s;
+  }
+
+  body.dark-theme {
     background-color: var(--bg-dark);
     color: var(--text-light);
   }
 
-  body[data-theme="light"] {
-    background-color: var(--bg-light);
-    color: var(--text-dark);
+  h2 {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .create-button {
+    padding: 6px 14px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    opacity: 0.85;
+    transition-duration: 0.4s;
+    background-color: var(--btn-bg);
+    color: var(--btn-text);
+    text-decoration: none;
+  }
+
+  .create-button:hover {
+    opacity: 1;
+    background-color: var(--btn-bg-hover);
   }
 
   .card {
     border-radius: 12px;
     margin-bottom: 1.5rem;
     border: 1px solid;
+    padding: 1rem;
+    position: relative;
+    word-wrap: break-word;
+    background-color: var(--card-light);
+    border-color: var(--border-light);
+    color: var(--text-dark);
+    transition: background-color 0.3s, color 0.3s, border-color 0.3s;
   }
 
-  body[data-theme="dark"] .card {
+  body.dark-theme .card {
     background-color: var(--card-dark);
     border-color: var(--border-dark);
     color: var(--text-light);
   }
 
-  body[data-theme="light"] .card {
-    background-color: var(--card-light);
-    border-color: var(--border-light);
-    color: var(--text-dark);
-  }
-
-  h2, h5, p, small {
+  h5, p, small {
     margin-bottom: 0.5rem;
+    word-break: break-word;
   }
 
   img {
     border-radius: 8px;
     border: 1px solid #ccc;
-    max-height: 300px;
+    max-width: 100%;
+    height: auto;
+  }
+
+  .button {
+    padding: 6px 14px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    opacity: 0.7;
+    transition-duration: 0.4s;
+    background-color: var(--btn-bg);
+    color: var(--btn-text);
+    text-decoration: none;
+  }
+
+  .button:hover {
+    opacity: 1;
+    background-color: var(--btn-bg-hover);
+  }
+
+  .card-actions {
+    position: absolute;
+    bottom: 1rem;
+    right: 1rem;
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+
+  @media (max-width: 600px) {
+    .card-actions {
+      position: static;
+      margin-top: 0.5rem;
+      justify-content: flex-end;
+    }
+    .card {
+      padding: 0.75rem;
+    }
+    h2 {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.5rem;
+    }
   }
 </style>
 
-<h2>My Posts</h2>
+<h2>
+  My Posts
+  <a href="{% url 'create_issue' %}" class="create-button">Post an Issue</a>
+</h2>
 
 {% for issue in posts %}
   <div class="card">
@@ -63,6 +145,13 @@
         <img src="{{ issue.image.url }}" class="img-fluid mb-2">
       {% endif %}
       <p><small>Created at: {{ issue.created_at }}</small></p>
+
+      {% if request.user == issue.user %}
+        <div class="card-actions">
+          <a href="{% url 'post_edit' issue.id %}" class="button">Edit</a>
+          <a href="{% url 'post_delete' issue.id %}" class="button">Delete</a>
+        </div>
+      {% endif %}
     </div>
   </div>
 {% empty %}
