@@ -41,11 +41,17 @@ def create_issue(request):
         form = IssueForm()
     return render(request, 'issues/create_issue.html', {'form': form})
 
-@login_required
 def issue_list(request):
+    """✅ Public feed: everyone can view issues"""
     issues = Issue.objects.annotate(likes_count=Count('likes')).order_by('-likes_count')
-    voted_ids = Vote.objects.filter(user=request.user).values_list('issue_id', flat=True)
-    liked_ids = Like.objects.filter(user=request.user).values_list('issue_id', flat=True)
+
+    # For anonymous users, voted_ids & liked_ids will be empty
+    if request.user.is_authenticated:
+        voted_ids = Vote.objects.filter(user=request.user).values_list('issue_id', flat=True)
+        liked_ids = Like.objects.filter(user=request.user).values_list('issue_id', flat=True)
+    else:
+        voted_ids = []
+        liked_ids = []
 
     # ✅ Filtering
     division = request.GET.get('division')

@@ -75,7 +75,6 @@
     box-shadow: 0 0 6px rgba(255,152,0,0.4);
   }
 
-  /* Submit Button */
   .submit-button {
     margin-top: 10px;
     background-color: transparent;
@@ -95,14 +94,13 @@
     transform: translateY(-2px);
   }
 
-  /* Checkbox inline style */
+
   .checkbox-field {
     display: flex;
     align-items: center;
     gap: 10px;
   }
 
-  /* Responsive adjustments */
   @media (max-width: 500px) {
     .register-card {
       padding: 30px 20px;
@@ -116,10 +114,15 @@
     <form method="post" class="register-form">
       {% csrf_token %}
       {% for field in form %}
-        {% if field.name == "is_government" %}
+        {% if field.name == "is_govt" %}
           <div class="register-field checkbox-field">
-            <input type="checkbox" name="{{ field.html_name }}" id="{{ field.id_for_label }}" {% if field.value %}checked{% endif %}>
+            {{ field }}
             <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+          </div>
+        {% elif field.name == "govt_code" %}
+          <div class="register-field" id="govt-code-field" style="display:none;">
+            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+            {{ field }}
           </div>
         {% else %}
           <div class="register-field">
@@ -132,4 +135,23 @@
     </form>
   </div>
 </div>
+
+<script>
+  const govtCheckbox = document.getElementById("id_is_govt");
+  const govtCodeField = document.getElementById("govt-code-field");
+
+  function toggleGovtCode() {
+    if (govtCheckbox.checked) {
+      govtCodeField.style.display = "block";
+    } else {
+      govtCodeField.style.display = "none";
+      // Clear the value if hidden
+      govtCodeField.querySelector("input").value = "";
+    }
+  }
+
+  govtCheckbox.addEventListener("change", toggleGovtCode);
+  // Initialize on page load
+  toggleGovtCode();
+</script>
 {% endblock %}

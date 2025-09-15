@@ -3,5 +3,5 @@
   <component name="Black">
     <option name="sdkName" value="Python 3.13 (voice_bridge_project)" />
   </component>
-  <component name="ProjectRootManager" version="2" project-jdk-name="Python 3.13 (voice_bridge_project)" project-jdk-type="Python SDK" />
+  <component name="ProjectRootManager" version="2" project-jdk-name="Python 3.13 (the_voice_bridge)" project-jdk-type="Python SDK" />
 </project>

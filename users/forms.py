@@ -3,12 +3,26 @@ from django.contrib.auth.forms import UserCreationForm
 from .models import CustomUser
 
 class CustomUserCreationForm(UserCreationForm):
+    first_name = forms.CharField(max_length=30, required=True, label="First Name")
+    last_name = forms.CharField(max_length=30, required=True, label="Last Name")
     is_govt = forms.BooleanField(label="Government User", required=False)
     govt_code = forms.CharField(required=False, label="Government Code")
 
     class Meta:
         model = CustomUser
-        fields = ['username', 'email', 'password1', 'password2', 'is_govt', 'govt_code', 'division', 'district', 'upazila']
+        fields = [
+            'username',
+            'first_name',
+            'last_name',
+            'email',
+            'password1',
+            'password2',
+            'is_govt',
+            'govt_code',
+            'division',
+            'district',
+            'upazila'
+        ]
 
     def clean(self):
         cleaned_data = super().clean()

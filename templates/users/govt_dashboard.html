@@ -2,7 +2,7 @@
 {% block content %}
 
 <style>
-  /* Light Theme */
+
   :root {
     --bg-color: #E6F4EC;
     --text-color: #121212;
@@ -16,7 +16,7 @@
     --section-title: #2c3e50;
   }
 
-  /* Dark Theme */
+
   [data-theme="dark"] {
     --bg-color: #0d0d10;
     --text-color: #f5f5f5;
@@ -82,7 +82,7 @@
     padding: 1rem;
   }
 
-  /* Responsive Adjustments */
+
   @media (max-width: 768px) {
     h2, h4 {
       font-size: 1.2rem;
@@ -106,10 +106,10 @@
 
 <div class="container-fluid">
 
-  <!-- Page Title -->
+
   <h2 class="mb-4">⚙️ Admin User Dashboard</h2>
 
-  <!-- Section: User Verification -->
+
   <div class="dashboard-section">
     <h4 class="mb-3">👥 Users Awaiting Verification</h4>
     {% if unverified_users %}
@@ -134,7 +134,7 @@
     {% endif %}
   </div>
 
-  <!-- Section: Issue Summary -->
+
   <div class="dashboard-section">
     <h4 class="mb-3">📍 Issue Summary (Last 30 Days)</h4>
     {% if issue_summary %}

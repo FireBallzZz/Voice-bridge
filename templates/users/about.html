@@ -11,24 +11,24 @@
     font-family: 'Segoe UI', sans-serif;
   }
 
-  /* Fixed Background */
+
   body {
     position: relative;
     background: url("{% static 'images/mbg.jpg' %}") no-repeat center center fixed;
     background-size: cover;
-    color: #000; /* fixed text color */
+    color: #000;
   }
 
-  /* Overlay */
+
   body::before {
     content: "";
     position: fixed;
     top: 0; left: 0; right: 0; bottom: 0;
-    background: rgba(255, 255, 255, 0.85); /* fixed overlay color */
+    background: rgba(255, 255, 255, 0.85);
     z-index: -1;
   }
 
-  /* Sections */
+
   .section {
     width: 100%;
     min-height: 100vh;
@@ -57,13 +57,13 @@
 
   .text-box {
     width: 60%;
-    background: rgba(255, 255, 255, 0.85); /* fixed background */
+    background: rgba(255, 255, 255, 0.85);
     padding: 20px;
     border-radius: 10px;
-    text-align: left; /* keeps alignment correct */
+    text-align: left;
   }
 
-  /* Responsive */
+
   @media (max-width: 768px) {
     .content {
       flex-direction: column;
@@ -75,7 +75,7 @@
   }
 </style>
 
-<!-- Section 1 -->
+
 <div id="section1" class="section">
   <div class="content">
     <img src="{% static 'images/section1.png' %}" alt="Transparency">
@@ -86,7 +86,7 @@
   </div>
 </div>
 
-<!-- Section 2 -->
+
 <div id="section2" class="section">
   <div class="content" style="flex-direction: row-reverse;">
     <img src="{% static 'images/section2.png' %}" alt="Citizen Power">
@@ -97,7 +97,7 @@
   </div>
 </div>
 
-<!-- Section 3 -->
+
 <div id="section3" class="section">
   <div class="content">
     <img src="{% static 'images/section3.png' %}" alt="Government Power">

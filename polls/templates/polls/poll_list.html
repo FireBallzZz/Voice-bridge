@@ -3,7 +3,7 @@
 {% block content %}
 
 <style>
-  /* Light Theme Variables */
+
   body {
     --bg-color: #ffffff;
     --text-color: #121212;
@@ -18,7 +18,7 @@
     transition: all 0.3s ease;
   }
 
-  /* Dark Theme Overrides */
+
   body.dark-theme {
     --bg-color: #121212;
     --text-color: #f5f5f5;
@@ -32,28 +32,28 @@
     --btn-custom-text: #ffffff;
   }
 
+
   body {
-  background: url("{% static 'images/7.jpg' %}") no-repeat center center fixed;
-  background-size: cover;
-  background-attachment: fixed;
-  color: var(--text-color);
-  min-height: 100vh;
-  margin: 0;
-  padding: 0;
-  position: relative;
-}
-
-/* Overlay for readability */
-body::before {
-  content: "";
-  position: fixed;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background: rgba(0, 0, 0, 0.4); /* dark overlay */
-  z-index: -1;
-}
+    background: url("{% static 'images/7.png' %}") no-repeat center center fixed;
+    background-size: cover;
+    background-attachment: fixed;
+    color: var(--text-color);
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+    position: relative;
+  }
 
 
-  /* Cards */
+  body::before {
+    content: "";
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0, 0, 0, 0.4);
+    z-index: -1;
+  }
+
+
   .card {
     background-color: var(--card-bg);
     border: 1px solid var(--card-border);
@@ -117,8 +117,19 @@ body::before {
     color: var(--text-color);
   }
 
+
   .alert {
+    background-color: rgba(255, 255, 255, 0.95);
     color: #000;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 12px 20px;
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1050;
+    min-width: 250px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
   }
 
   @media (max-width: 576px) {
@@ -129,7 +140,7 @@ body::before {
   }
 </style>
 
-<!-- Flash Messages -->
+
 {% if messages %}
   {% for message in messages %}
     <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
@@ -138,6 +149,17 @@ body::before {
     </div>
   {% endfor %}
 {% endif %}
+
+<script>
+  setTimeout(() => {
+    const alerts = document.querySelectorAll('.alert');
+    alerts.forEach(alert => {
+      alert.style.transition = 'opacity 0.5s';
+      alert.style.opacity = '0';
+      setTimeout(() => alert.remove(), 500);
+    });
+  }, 3000);
+</script>
 
 <div class="d-flex justify-content-between align-items-center mb-3">
   <h2 class="mb-0">🗳️ Public Polls</h2>
@@ -171,7 +193,7 @@ body::before {
         {% endif %}
       </div>
 
-      <!-- Results Box -->
+
       <div class="transparent-box mt-3">
         <strong>📊 Results:</strong>
         <ul class="list-group list-group-flush mt-2">

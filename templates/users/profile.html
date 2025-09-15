@@ -1,8 +1,8 @@
 {% extends 'base.html' %}
 {% block content %}
-
+{% load static %}
 <style>
-  /* Light Theme Variables */
+
   body {
     --bg-color: #C7F4DA;
     --text-color: #121212;
@@ -17,7 +17,7 @@
     transition: all 0.3s ease;
   }
 
-  /* Dark Theme Variables */
+
   body.dark-theme {
     --bg-color: #121212;
     --text-color: #f5f5f5;
@@ -115,13 +115,20 @@
 
 <div class="card mb-4">
   <div class="card-body text-center">
-    {% if profile_user.profile_pic %}
-      <img src="{{ profile_user.profile_pic.url }}" class="profile-pic" alt="Profile Picture">
-    {% else %}
-      <img src="https://via.placeholder.com/140" class="profile-pic" alt="Default Profile Picture">
-    {% endif %}
+ {% if profile_user.profile_pic %}
+  <img src="{{ profile_user.profile_pic.url }}" class="profile-pic" alt="Profile Picture">
+{% else %}
+  <img src="{% static 'images/default_profile.png' %}" class="profile-pic" alt="Default Profile Picture">
+{% endif %}
 
-    <h3 class="username">{{ profile_user.username }}</h3>
+    <h3 class="username">
+      {% if profile_user.first_name or profile_user.last_name %}
+        {{ profile_user.first_name }} {{ profile_user.last_name }}
+      {% else %}
+        {{ profile_user.username }}
+      {% endif %}
+    </h3>
+
     <p class="bio">{{ profile_user.bio|default:"No bio available." }}</p>
 
     <p class="info-line"><strong>📍 Location:</strong> {{ profile_user.division }}, {{ profile_user.district }}, {{ profile_user.upazila }}</p>
