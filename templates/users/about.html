@@ -1,93 +1,111 @@
 {% extends 'base.html' %}
+{% block content %}
 {% load static %}
 
-{% block content %}
 <style>
-  html { scroll-behavior: smooth; }
-
-  /* Override Bootstrap container */
-  .content-wrapper .container {
-    max-width: 100% !important;
-    padding: 0 !important;
-    margin: 0 !important;
+  html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    min-height: 100%;
+    font-family: 'Segoe UI', sans-serif;
   }
 
-  /* Section Styling */
-  section {
-    height: 100vh; /* full screen height */
-    width: 100%;   /* full screen width */
+  /* Fixed Background */
+  body {
+    position: relative;
+    background: url("{% static 'images/mbg.jpg' %}") no-repeat center center fixed;
+    background-size: cover;
+    color: #000; /* fixed text color */
+  }
+
+  /* Overlay */
+  body::before {
+    content: "";
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(255, 255, 255, 0.85); /* fixed overlay color */
+    z-index: -1;
+  }
+
+  /* Sections */
+  .section {
+    width: 100%;
+    min-height: 100vh;
     display: flex;
-    flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 60px 20px;
-    color: #fff;
-    text-align: center;
+    padding: 50px 20px;
   }
 
-  section h2 {
-    font-size: 3rem;
-    margin-bottom: 20px;
-    font-family: 'PT Serif', serif;
+  .content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    width: 100%;
+    max-width: 1000px;
+    gap: 40px;
+    z-index: 1;
   }
 
-  section p {
-    max-width: 900px;
-    font-size: 1.3rem;
-    line-height: 1.8;
-    font-family: 'Finlandica', sans-serif;
+  .content img {
+    width: 50%;
+    border-radius: 12px;
+    box-shadow: 0 0 20px 5px #99DEB6;
   }
 
-  /* Unique Backgrounds */
-  #transparency {
-    background: linear-gradient(135deg, #1abc9c, #16a085);
+  .text-box {
+    width: 60%;
+    background: rgba(255, 255, 255, 0.85); /* fixed background */
+    padding: 20px;
+    border-radius: 10px;
+    text-align: left; /* keeps alignment correct */
   }
 
-  #citizen {
-    background: linear-gradient(135deg, #2980b9, #2c3e50);
-  }
-
-  #govt {
-    background: linear-gradient(135deg, #8e44ad, #2c3e50);
-  }
-
-  /* Icons */
-  .section-icon {
-    font-size: 4rem;
-    margin-bottom: 25px;
-    color: #ffc107;
+  /* Responsive */
+  @media (max-width: 768px) {
+    .content {
+      flex-direction: column;
+      text-align: center;
+    }
+    .content img, .text-box {
+      width: 100%;
+    }
   }
 </style>
 
-<div id="about-section">
-  <section id="transparency">
-    <i class="fas fa-search section-icon"></i>
-    <h2>Transparency</h2>
-    <p>
-      Transparency builds trust between citizens and leaders.
-      Every issue, poll, and government response remains open and visible,
-      enabling people to stay informed and hold institutions accountable.
-    </p>
-  </section>
-
-  <section id="citizen">
-    <i class="fas fa-users section-icon"></i>
-    <h2>Citizen Power</h2>
-    <p>
-      The Voice Bridge gives citizens the ability to raise their voices, propose
-      solutions, and unite around important issues. Communities gain the strength
-      to influence policies and drive real change in society.
-    </p>
-  </section>
-
-  <section id="govt">
-    <i class="fas fa-university section-icon"></i>
-    <h2>Government Power</h2>
-    <p>
-      Governments use The Voice Bridge to listen, engage, and prioritize issues
-      that reflect real needs. This dialogue creates stronger democracies
-      where decisions are shaped by the people.
-    </p>
-  </section>
+<!-- Section 1 -->
+<div id="section1" class="section">
+  <div class="content">
+    <img src="{% static 'images/section1.png' %}" alt="Transparency">
+    <div class="text-box">
+      <h2>Transparency</h2>
+      <p>The Voice Bridge promotes transparency by openly displaying all citizen posts, government responses, and poll results. Every action taken by authorities is visible, allowing citizens to track progress, understand decision-making, and hold officials accountable. This open system builds trust, encourages active participation, and ensures that government activities are clear and accessible to all.</p>
+    </div>
+  </div>
 </div>
+
+<!-- Section 2 -->
+<div id="section2" class="section">
+  <div class="content" style="flex-direction: row-reverse;">
+    <img src="{% static 'images/section2.png' %}" alt="Citizen Power">
+    <div class="text-box">
+      <h2>Citizen Power</h2>
+      <p>The Voice Bridge empowers citizens by giving them a platform to voice their concerns, report local issues, and participate in polls. People can influence government actions by highlighting problems that matter most to their communities, ensuring their opinions are heard and considered in decision-making. This strengthens civic engagement and puts real power in the hands of the public.</p>
+    </div>
+  </div>
+</div>
+
+<!-- Section 3 -->
+<div id="section3" class="section">
+  <div class="content">
+    <img src="{% static 'images/section3.png' %}" alt="Government Power">
+    <div class="text-box">
+      <h2>Government Power</h2>
+      <p>The Voice Bridge allows government authorities to respond directly to citizen posts, concerns, and polls. Officials can provide updates, explain decisions, and share actions taken on reported issues. This transparent communication ensures that citizens stay informed, can track progress, and hold authorities accountable. By creating a clear and open channel between the public and the government, it strengthens trust, encourages civic participation, and ensures that citizen voices lead to meaningful action.</p>
+    </div>
+  </div>
+</div>
+
 {% endblock %}

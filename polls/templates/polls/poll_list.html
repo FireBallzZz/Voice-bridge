@@ -33,21 +33,25 @@
   }
 
   body {
-    background: url("{% static 'images/7.png' %}") no-repeat center center;
-    background-size: cover;
-    background-attachment: scroll;
-    color: var(--text-color);
-    min-height: 100vh;
-    position: relative;
-  }
+  background: url("{% static 'images/7.jpg' %}") no-repeat center center fixed;
+  background-size: cover;
+  background-attachment: fixed;
+  color: var(--text-color);
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+  position: relative;
+}
 
-  body::before {
-    content: "";
-    position: fixed;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background: rgba(0,0,0,0.4); /* overlay for readability */
-    z-index: -1;
-  }
+/* Overlay for readability */
+body::before {
+  content: "";
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0, 0, 0, 0.4); /* dark overlay */
+  z-index: -1;
+}
+
 
   /* Cards */
   .card {

@@ -5,9 +5,9 @@
 <style>
   :root {
     --bg-color: #E6F4EC;
-    --text-color: #121212;
+    --text-color: #006A4E;
     --btn-color: #ffffff;
-    --btn-bg-hover: #000000;
+    --btn-bg-hover: #ff0707;
   }
 
   [data-theme="dark"] {
@@ -20,7 +20,7 @@
   body {
     background-color: var(--bg-color);
     color: var(--text-color);
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: 'Segue UI', Tahoma, Geneva, Verdana, sans-serif;
     margin: 0;
     min-height: 100vh;
   }
@@ -64,7 +64,7 @@
   }
 
   .hero-subtitle {
-    font-family: 'Finlandica', sans-serif;
+    font-family: 'Finland', sans-serif;
     font-size: 1.2rem;
     margin-top: 15px;
     font-weight: 400;
@@ -103,13 +103,13 @@
     background-color: var(--bg-color);
     color: var(--text-color);
     text-align: center;
-    padding: 200px 20px 20px 20px;
+    padding: 200px 20px 10px 20px;
   }
 
   .about-section h2 {
     font-size: 2rem;
     font-weight: 700;
-    margin-bottom: 40px;
+    margin-bottom: 30px;
     position: relative;
     display: inline-block;
   }
@@ -127,7 +127,7 @@
   .about-items {
     display: flex;
     flex-direction: column;
-    gap: 30px;
+    gap: 60px;
     justify-content: center;
     align-items: center;
   }
@@ -135,9 +135,10 @@
   .about-item {
     display: flex;
     align-items: center;
-    gap: 25px;
+    gap: 10px;
     font-size: 1.2rem;
     font-weight: 600;
+    padding: 20px 40px 0px 40px;
   }
 
   .about-item i {
@@ -223,15 +224,15 @@
   <div class="about-items">
     <div class="about-item">
       <i class="fas fa-search"></i>
-      <a href="{% url 'about' %}#transparency" class="nav-link">Transparency</a>
+      <a href="{% url 'about' %}#section1" class="nav-link">Transparency</a>
     </div>
     <div class="about-item">
       <i class="fas fa-user"></i>
-      <a href="{% url 'about' %}#citizen" class="nav-link">Citizen Power</a>
+      <a href="{% url 'about' %}#section2" class="nav-link">Citizen Power</a>
     </div>
     <div class="about-item">
       <i class="fas fa-university"></i>
-      <a href="{% url 'about' %}#govt" class="nav-link">Government Power</a>
+      <a href="{% url 'about' %}#section3" class="nav-link">Government Power</a>
     </div>
   </div>
 </div>
